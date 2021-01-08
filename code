@@ -1,0 +1,116 @@
+    
+2    import numpy as np
+3    import random
+4    from time import sleep
+5    
+6    
+7    
+8    def board():
+9        return (np.array([[0, 0, 0],
+10                         [0, 0, 0],
+11                         [0, 0, 0]]))
+12   
+13   
+14   
+15   def possibilities(board):
+16       l = []
+17   
+18       for i in range(len(board)):
+19           for j in range(len(board)):
+20   
+21               if board[i][j] == 0:
+22                   l.append((i, j))
+23       return (l)
+24   
+25   
+26   def random_place(board, player):
+27       selection = possibilities(board)
+28       current_loc = random.choice(selection)
+29       board[current_loc] = player
+30       return (board)
+31   
+32   
+33   
+34   def row_win(board, player):
+35       for x in range(len(board)):
+36           win = True
+37   
+38           for y in range(len(board)):
+39               if board[x, y] != player:
+40                   win = False
+41                   continue
+42   
+43           if win == True:
+44               return (win)
+45       return (win)
+46   
+47   
+48   
+49   def col_win(board, player):
+50       for x in range(len(board)):
+51           win = True
+52   
+53           for y in range(len(board)):
+54               if board[y][x] != player:
+55                   win = False
+56                   continue
+57   
+58           if win == True:
+59               return (win)
+60       return (win)
+61   
+62   
+63   
+64   def diag_win(board, player):
+65       win = True
+66       y = 0
+67       for x in range(len(board)):
+68           if board[x, x] != player:
+69               win = False
+70       if win:
+71           return win
+72       win = True
+73       if win:
+74           for x in range(len(board)):
+75               y = len(board) - 1 - x
+76               if board[x, y] != player:
+77                   win = False
+78       return win
+79   
+80   
+81   
+82   def evaluate(board):
+83       winner = 0
+84   
+85       for player in [1, 2]:
+86           if (row_win(board, player) or
+87                   col_win(board, player) or
+88                   diag_win(board, player)):
+89               winner = player
+90   
+91       if np.all(board != 0) and winner == 0:
+92           winner = -1
+93       return winner
+94   
+95   
+96   
+97   def play_game():
+98       board, winner, counter = board(), 0, 1
+99       print(board)
+100      sleep(2)
+101  
+102      while winner == 0:
+103          for player in [1, 2]:
+104              board = random_place(board, player)
+105              print("Board after " + str(counter) + " move")
+106              print(board)
+107              sleep(2)
+108              counter += 1
+109              winner = evaluate(board)
+110              if winner != 0:
+111                  break
+112      return (winner)
+113  
+114  
+115  
+116  print("Winner is: " + str(play_game()))
